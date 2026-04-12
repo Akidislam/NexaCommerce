@@ -29,11 +29,17 @@ Route::get('/dashboard', function () {
     }
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Profile Routes
+// Profile & Cart Routes
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class , 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class , 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class , 'destroy'])->name('profile.destroy');
+
+    // Database Cart
+    Route::get('/cart', [\App\Http\Controllers\CartController::class , 'index'])->name('cart.index');
+    Route::post('/cart', [\App\Http\Controllers\CartController::class , 'store'])->name('cart.store');
+    Route::put('/cart/{id}', [\App\Http\Controllers\CartController::class , 'update'])->name('cart.update');
+    Route::delete('/cart/{id}', [\App\Http\Controllers\CartController::class , 'destroy'])->name('cart.destroy');
 });
 
 // Admin Routes
@@ -48,8 +54,15 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
 // Vendor Routes
 Route::middleware(['auth', 'verified', 'role:vendor'])->prefix('vendor')->name('vendor.')->group(function () {
     Route::get('/dashboard', [VendorDashboardController::class , 'index'])->name('dashboard');
-    Route::get('/products', [VendorDashboardController::class , 'products'])->name('products');
-    Route::get('/orders', [VendorDashboardController::class , 'orders'])->name('orders');
+
+    // Shop setup & management
+    Route::get('/shop/create', [\App\Http\Controllers\Vendor\ShopController::class , 'create'])->name('shop.create');
+    Route::post('/shop', [\App\Http\Controllers\Vendor\ShopController::class , 'store'])->name('shop.store');
+
+    // Products & Orders
+    // We already have index logic in VendorDashboardController optionally, but let's use the dedicated controllers:
+    Route::resource('products', \App\Http\Controllers\Vendor\VendorProductController::class);
+    Route::resource('orders', \App\Http\Controllers\Vendor\VendorOrderController::class)->only(['index', 'show', 'update']);
 });
 
 // Customer Routes

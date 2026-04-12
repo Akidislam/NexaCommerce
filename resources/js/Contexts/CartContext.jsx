@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 const CartContext = createContext();
 
@@ -10,27 +11,55 @@ export function CartProvider({ children }) {
     const [cartItems, setCartItems] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
-    // Load cart from local storage on first render
+    // Initial load from server if logged in, fallback to local storage
     useEffect(() => {
-        const savedCart = localStorage.getItem('nexa_cart');
-        if (savedCart) {
+        const fetchCart = async () => {
             try {
-                setCartItems(JSON.parse(savedCart));
+                // Try fetching from database first
+                const res = await axios.get('/cart');
+                if (res.data && Array.isArray(res.data)) {
+                    // Normalize the data (our local storage structure was a bit different)
+                    // The DB cart items come back as {id, product_id, quantity, product: {...}}
+                    const mappedItems = res.data.map(item => ({
+                        cart_item_id: item.id,
+                        quantity: item.quantity,
+                        ...item.product
+                    }));
+                    setCartItems(mappedItems);
+                    setIsLoaded(true);
+                    return;
+                }
             } catch (error) {
-                console.error('Failed to parse cart data');
+                // Not logged in or error, fallback to local
             }
-        }
-        setIsLoaded(true);
+
+            // Fallback
+            const savedCart = localStorage.getItem('nexa_cart');
+            if (savedCart) {
+                try {
+                    setCartItems(JSON.parse(savedCart));
+                } catch (e) { }
+            }
+            setIsLoaded(true);
+        };
+
+        fetchCart();
     }, []);
 
-    // Save cart to local storage whenever it changes
+    // Save to local storage whenever cart items change
     useEffect(() => {
         if (isLoaded) {
             localStorage.setItem('nexa_cart', JSON.stringify(cartItems));
         }
     }, [cartItems, isLoaded]);
 
-    const addToCart = (product) => {
+    const addToCart = async (product) => {
+        // Try saving to DB
+        try {
+            await axios.post('/cart', { product_id: product.id, quantity: 1 });
+        } catch (error) { }
+
+        // Optimistically update UI
         setCartItems((prevItems) => {
             const existingItem = prevItems.find((item) => item.id === product.id);
             if (existingItem) {
@@ -44,12 +73,28 @@ export function CartProvider({ children }) {
         });
     };
 
-    const removeFromCart = (productId) => {
+    const removeFromCart = async (productId) => {
+        // Find cart item ID 
+        const item = cartItems.find(i => i.id === productId);
+        if (item && item.cart_item_id) {
+            try {
+                await axios.delete(`/cart/${item.cart_item_id}`);
+            } catch (error) { }
+        }
+
         setCartItems((prevItems) => prevItems.filter((item) => item.id !== productId));
     };
 
-    const updateQuantity = (productId, newQuantity) => {
+    const updateQuantity = async (productId, newQuantity) => {
         if (newQuantity < 1) return;
+
+        const item = cartItems.find(i => i.id === productId);
+        if (item && item.cart_item_id) {
+            try {
+                await axios.put(`/cart/${item.cart_item_id}`, { quantity: newQuantity });
+            } catch (error) { }
+        }
+
         setCartItems((prevItems) =>
             prevItems.map((item) =>
                 item.id === productId ? { ...item, quantity: newQuantity } : item
