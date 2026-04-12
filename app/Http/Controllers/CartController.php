@@ -8,13 +8,18 @@ use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-    public function index()
+    public function getCart()
     {
         $cartItems = Cart::with('product')
             ->where('user_id', auth()->id())
             ->get();
 
         return response()->json($cartItems);
+    }
+
+    public function index()
+    {
+        return \Inertia\Inertia::render('Cart');
     }
 
     public function store(Request $request)

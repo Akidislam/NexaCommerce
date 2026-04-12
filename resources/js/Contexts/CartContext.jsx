@@ -16,7 +16,7 @@ export function CartProvider({ children }) {
         const fetchCart = async () => {
             try {
                 // Try fetching from database first
-                const res = await axios.get('/cart');
+                const res = await axios.get('/api/cart');
                 if (res.data && Array.isArray(res.data)) {
                     // Normalize the data (our local storage structure was a bit different)
                     // The DB cart items come back as {id, product_id, quantity, product: {...}}

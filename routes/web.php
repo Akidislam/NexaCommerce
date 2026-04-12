@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class , 'destroy'])->name('profile.destroy');
 
     // Database Cart
+    Route::get('/api/cart', [\App\Http\Controllers\CartController::class , 'getCart'])->name('cart.api');
     Route::get('/cart', [\App\Http\Controllers\CartController::class , 'index'])->name('cart.index');
     Route::post('/cart', [\App\Http\Controllers\CartController::class , 'store'])->name('cart.store');
     Route::put('/cart/{id}', [\App\Http\Controllers\CartController::class , 'update'])->name('cart.update');
