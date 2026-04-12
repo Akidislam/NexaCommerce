@@ -116,7 +116,7 @@ export default function Home({ categories = [], featuredProducts = [], latestPro
                         {demoCategories.map((cat) => (
                             <Link
                                 key={cat.id}
-                                href="#"
+                                href={route('category.show', cat.slug)}
                                 className="category-card flex flex-col items-center gap-2 p-3 sm:p-4 bg-white rounded-xl border border-gray-100 hover:border-nexa-blue/30 transition-all text-center"
                             >
                                 <span className="text-2xl sm:text-3xl">{cat.icon}</span>

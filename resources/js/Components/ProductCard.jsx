@@ -1,6 +1,19 @@
 import { Link } from '@inertiajs/react';
+import { useCart } from '@/Contexts/CartContext';
+import { useState } from 'react';
 
 export default function ProductCard({ product }) {
+    const { addToCart } = useCart();
+    const [added, setAdded] = useState(false);
+
+    const handleAddToCart = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        addToCart(product);
+        setAdded(true);
+        setTimeout(() => setAdded(false), 2000); // Reset visual state after 2 seconds
+    };
+
     const discountPercent = product.discount_price
         ? Math.round(((product.price - product.discount_price) / product.price) * 100)
         : 0;
@@ -8,7 +21,9 @@ export default function ProductCard({ product }) {
     return (
         <div className="product-card card overflow-hidden group cursor-pointer">
             {/* Image */}
-            <div className="relative aspect-square bg-gray-50 overflow-hidden">
+            <div className="relative aspect-square bg-gray-50 overflow-hidden" onClick={(e) => {
+                // If it's eventually wrapped in a link, we might want to prevent default for specific clicks
+            }}>
                 <img
                     src={product.thumbnail || `https://ui-avatars.com/api/?name=${encodeURIComponent(product.name)}&background=eff6ff&color=2979FF&size=400&font-size=0.3`}
                     alt={product.name}
@@ -81,6 +96,32 @@ export default function ProductCard({ product }) {
                         <span>({product.total_reviews || 0})</span>
                     </div>
                     <span>{product.total_sold || 0} sold</span>
+                </div>
+
+                {/* Add to Cart Button */}
+                <div className="mt-3">
+                    <button
+                        onClick={handleAddToCart}
+                        className={`w-full py-2 rounded-lg font-medium text-sm transition-all duration-300 flex justify-center items-center gap-2 ${added ? 'bg-green-500 text-white' : 'bg-nexa-blue/10 text-nexa-blue hover:bg-nexa-blue hover:text-white'
+                            }`}
+                        disabled={added}
+                    >
+                        {added ? (
+                            <>
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                                Added
+                            </>
+                        ) : (
+                            <>
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+                                </svg>
+                                Add to Cart
+                            </>
+                        )}
+                    </button>
                 </div>
             </div>
         </div>

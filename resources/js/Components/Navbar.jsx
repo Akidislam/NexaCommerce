@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
+import { useCart } from '@/Contexts/CartContext';
 
 export default function Navbar() {
     const { auth } = usePage().props;
     const [menuOpen, setMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const { cartTotalCount } = useCart();
 
     return (
         <>
@@ -57,16 +59,18 @@ export default function Navbar() {
 
                         {/* Right Side Actions */}
                         <div className="flex items-center gap-2 sm:gap-4">
+                            {/* Cart (Visible to everyone) */}
+                            <Link href="#" className="relative p-2 text-gray-600 hover:text-nexa-blue transition-colors">
+                                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+                                </svg>
+                                <span className="absolute -top-1 -right-1 bg-nexa-orange text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
+                                    {cartTotalCount}
+                                </span>
+                            </Link>
+
                             {auth?.user ? (
                                 <>
-                                    {/* Cart */}
-                                    <Link href="#" className="relative p-2 text-gray-600 hover:text-nexa-blue transition-colors">
-                                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
-                                        </svg>
-                                        <span className="absolute -top-1 -right-1 bg-nexa-orange text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">0</span>
-                                    </Link>
-
                                     {/* User Menu */}
                                     <div className="relative group">
                                         <button className="flex items-center gap-2 p-2 text-gray-600 hover:text-nexa-blue transition-colors">
@@ -171,7 +175,7 @@ export default function Navbar() {
                         </Link>
                         <span className="text-gray-200">|</span>
                         {['Electronics', 'Fashion', 'Home & Living', 'Beauty', 'Sports', 'Groceries', 'Toys'].map((cat) => (
-                            <Link key={cat} href="#" className="text-gray-500 hover:text-nexa-blue transition-colors whitespace-nowrap">
+                            <Link key={cat} href={route('category.show', cat.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-'))} className="text-gray-500 hover:text-nexa-blue transition-colors whitespace-nowrap">
                                 {cat}
                             </Link>
                         ))}

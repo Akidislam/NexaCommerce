@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Vendor\VendorDashboardController;
 use App\Http\Controllers\Customer\CustomerController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -13,6 +14,7 @@ use Inertia\Inertia;
 
 // Public Routes
 Route::get('/', [HomeController::class , 'index'])->name('home');
+Route::get('/category/{slug}', [CategoryController::class , 'show'])->name('category.show');
 
 // Customer Dashboard (default for authenticated users)
 Route::get('/dashboard', function () {
