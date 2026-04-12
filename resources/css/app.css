@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply inline-flex items-center justify-center px-6 py-2.5 bg-nexa-blue text-white font-medium text-sm rounded-lg
+               hover:bg-nexa-blue-dark focus:ring-2 focus:ring-nexa-blue/30 focus:outline-none
+               transition-all duration-200 ease-in-out transform hover:scale-[1.02] active:scale-[0.98];
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center px-6 py-2.5 bg-white text-nexa-blue font-medium text-sm rounded-lg
+               border border-nexa-blue/20 hover:bg-nexa-blue/5 focus:ring-2 focus:ring-nexa-blue/20 focus:outline-none
+               transition-all duration-200 ease-in-out;
+    }
+
+    .btn-orange {
+        @apply inline-flex items-center justify-center px-6 py-2.5 bg-nexa-orange text-white font-medium text-sm rounded-lg
+               hover:bg-nexa-orange-light focus:ring-2 focus:ring-nexa-orange/30 focus:outline-none
+               transition-all duration-200 ease-in-out transform hover:scale-[1.02] active:scale-[0.98];
+    }
+
+    .card {
+        @apply bg-white rounded-xl shadow-card hover:shadow-card-hover transition-shadow duration-300;
+    }
+
+    .input-field {
+        @apply w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm
+               focus:border-nexa-blue focus:ring-2 focus:ring-nexa-blue/20 focus:outline-none
+               transition-all duration-200 placeholder:text-gray-400;
+    }
+
+    .badge {
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    }
+
+    .badge-success {
+        @apply badge bg-green-50 text-green-700;
+    }
+
+    .badge-warning {
+        @apply badge bg-yellow-50 text-yellow-700;
+    }
+
+    .badge-danger {
+        @apply badge bg-red-50 text-red-700;
+    }
+
+    .badge-info {
+        @apply badge bg-blue-50 text-nexa-blue;
+    }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}
+
+/* Product card hover effect */
+.product-card {
+    transition: all 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Category card */
+.category-card {
+    transition: all 0.3s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(41, 121, 255, 0.15);
+}
+
+/* Gradient backgrounds */
+.gradient-blue {
+    background: linear-gradient(135deg, #2979FF 0%, #448AFF 100%);
+}
+
+.gradient-orange {
+    background: linear-gradient(135deg, #F85606 0%, #FF6F20 100%);
+}
+
+.gradient-hero {
+    background: linear-gradient(135deg, #2979FF 0%, #448AFF 50%, #82b1ff 100%);
+}
