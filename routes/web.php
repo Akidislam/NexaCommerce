@@ -46,9 +46,17 @@ Route::middleware('auth')->group(function () {
 // Admin Routes
 Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class , 'index'])->name('dashboard');
+
+    // User Management
     Route::get('/users', [AdminDashboardController::class , 'users'])->name('users');
+    Route::post('/users/{id}/toggle-status', [AdminDashboardController::class , 'toggleUserStatus'])->name('users.toggleStatus');
+
+    // Shop Management
     Route::get('/shops', [AdminDashboardController::class , 'shops'])->name('shops');
     Route::post('/shops/{id}/toggle-status', [AdminDashboardController::class , 'toggleShopStatus'])->name('shops.toggleStatus');
+    Route::post('/shops/{id}/status/{status}', [AdminDashboardController::class , 'updateShopStatus'])->name('shops.updateStatus');
+
+    // Products & Categories
     Route::post('/products/{id}/status/{status}', [AdminDashboardController::class , 'updateProductStatus'])->name('products.updateStatus');
     Route::get('/categories', [AdminDashboardController::class , 'categories'])->name('categories');
     Route::get('/orders', [AdminDashboardController::class , 'orders'])->name('orders');

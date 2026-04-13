@@ -18,12 +18,18 @@ class HomeController extends Controller
             ->get();
 
         $featuredProducts = Product::where('status', 'active')
+            ->whereHas('shop', function ($q) {
+            $q->where('status', 'active');
+        })
             ->where('is_featured', true)
             ->with('shop')
             ->take(12)
             ->get();
 
         $latestProducts = Product::where('status', 'active')
+            ->whereHas('shop', function ($q) {
+            $q->where('status', 'active');
+        })
             ->with('shop')
             ->latest()
             ->take(24)

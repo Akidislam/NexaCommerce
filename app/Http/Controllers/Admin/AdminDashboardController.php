@@ -38,6 +38,19 @@ class AdminDashboardController extends Controller
         ]);
     }
 
+    public function updateShopStatus($id, $status)
+    {
+        if (!in_array($status, ['pending', 'active', 'suspended'])) {
+            return back()->with('error', 'Invalid status.');
+        }
+
+        $shop = Shop::findOrFail($id);
+        $shop->status = $status;
+        $shop->save();
+
+        return back()->with('success', 'Shop status updated successfully.');
+    }
+
     public function toggleShopStatus($id)
     {
         $shop = Shop::findOrFail($id);
@@ -60,12 +73,28 @@ class AdminDashboardController extends Controller
         return back()->with('success', 'Product status updated to ' . $status . ' successfully.');
     }
 
+    public function toggleUserStatus($id)
+    {
+        $user = User::findOrFail($id);
+        // Prevent admin deactivation
+        if ($user->role === 'admin') {
+            return back()->with('error', 'Cannot deactivate admin user.');
+        }
+
+        $user->is_active = !$user->is_active;
+        $user->save();
+
+        return back()->with('success', 'User status updated successfully.');
+    }
+
     public function users()
     {
-        $users = User::latest()->paginate(15);
+        $vendors = User::with('shop')->where('role', 'vendor')->latest()->get();
+        $customers = User::withCount('orders')->where('role', 'customer')->latest()->get();
 
         return Inertia::render('Admin/Users', [
-            'users' => $users,
+            'vendors' => $vendors,
+            'customers' => $customers,
         ]);
     }
 
