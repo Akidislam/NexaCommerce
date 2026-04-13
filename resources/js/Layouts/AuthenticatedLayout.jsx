@@ -129,7 +129,29 @@ export default function AuthenticatedLayout({ children, header }) {
                 )}
 
                 {/* Main Content */}
-                <div className="flex-1 flex flex-col min-w-0">
+                <div className="flex-1 flex flex-col min-w-0 relative">
+                    {/* Flash Toast Notifications */}
+                    {(usePage().props.flash?.success || usePage().props.flash?.error) && (
+                        <div className="absolute top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none">
+                            {usePage().props.flash.success && (
+                                <div className="bg-green-50 z-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg shadow-lg flex items-center gap-3">
+                                    <svg className="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <p className="text-sm font-semibold">{usePage().props.flash.success}</p>
+                                </div>
+                            )}
+                            {usePage().props.flash.error && (
+                                <div className="bg-red-50 z-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg shadow-lg flex items-center gap-3">
+                                    <svg className="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                    <p className="text-sm font-semibold">{usePage().props.flash.error}</p>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
                     {/* Top Bar */}
                     <header className="bg-white shadow-sm border-b border-gray-100 h-16 flex items-center px-4 sm:px-6 lg:px-8 gap-4">
                         <button
@@ -157,7 +179,7 @@ export default function AuthenticatedLayout({ children, header }) {
                     </header>
 
                     {/* Page Content */}
-                    <main className="flex-1 p-4 sm:p-6 lg:p-8">
+                    <main className="flex-1 p-4 sm:p-6 lg:p-8 relative">
                         {children}
                     </main>
                 </div>

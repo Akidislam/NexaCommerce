@@ -48,13 +48,13 @@ export default function Users({ vendors = [], customers = [] }) {
                             <tbody className="divide-y divide-gray-100 p-0">
                                 {activeTab === 'vendors' ? (
                                     vendors.length > 0 ? vendors.map((vendor) => (
-                                        <UserRow key={vendor.id} user={vendor} extraData={vendor.shop?.name || 'No Shop yet'} />
+                                        <UserRow key={vendor.id} user={vendor} extraData={vendor.shop?.name || 'No Shop yet'} isVendor={true} />
                                     )) : (
                                         <EmptyRow message="No vendors registered yet." />
                                     )
                                 ) : (
                                     customers.length > 0 ? customers.map((customer) => (
-                                        <UserRow key={customer.id} user={customer} extraData={`${customer.orders_count || 0} Orders`} />
+                                        <UserRow key={customer.id} user={customer} extraData={`${customer.orders_count || 0} Orders`} isVendor={false} />
                                     )) : (
                                         <EmptyRow message="No customers registered yet." />
                                     )
@@ -68,7 +68,7 @@ export default function Users({ vendors = [], customers = [] }) {
     );
 }
 
-function UserRow({ user, extraData }) {
+function UserRow({ user, extraData, isVendor }) {
     return (
         <tr className="hover:bg-blue-50/50 transition-colors">
             <td className="px-6 py-4">
@@ -92,16 +92,22 @@ function UserRow({ user, extraData }) {
                 </span>
             </td>
             <td className="px-6 py-4 text-right">
-                <Link
-                    href={route('admin.users.toggleStatus', user.id)}
-                    method="post" as="button" preserveScroll
-                    className={`px-4 py-1.5 rounded-md text-xs font-bold transition-colors ${user.is_active
+                {isVendor ? (
+                    <Link
+                        href={route('admin.users.toggleStatus', user.id)}
+                        method="post" as="button" preserveScroll
+                        className={`px-4 py-1.5 rounded-md text-xs font-bold transition-colors ${user.is_active
                             ? 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200'
                             : 'bg-green-50 text-green-600 hover:bg-green-100 border border-green-200'
-                        }`}
-                >
-                    {user.is_active ? 'Deactivate User' : 'Activate User'}
-                </Link>
+                            }`}
+                    >
+                        {user.is_active ? 'Deactivate User' : 'Activate User'}
+                    </Link>
+                ) : (
+                    <button className="px-4 py-1.5 rounded-md text-xs font-bold transition-colors bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200">
+                        View Profile
+                    </button>
+                )}
             </td>
         </tr>
     );
