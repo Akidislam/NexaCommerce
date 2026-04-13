@@ -48,6 +48,8 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::get('/dashboard', [AdminDashboardController::class , 'index'])->name('dashboard');
     Route::get('/users', [AdminDashboardController::class , 'users'])->name('users');
     Route::get('/shops', [AdminDashboardController::class , 'shops'])->name('shops');
+    Route::post('/shops/{id}/toggle-status', [AdminDashboardController::class , 'toggleShopStatus'])->name('shops.toggleStatus');
+    Route::post('/products/{id}/status/{status}', [AdminDashboardController::class , 'updateProductStatus'])->name('products.updateStatus');
     Route::get('/categories', [AdminDashboardController::class , 'categories'])->name('categories');
     Route::get('/orders', [AdminDashboardController::class , 'orders'])->name('orders');
 });

@@ -14,11 +14,11 @@ class RoleMiddleware
                 // Redirect based on user's actual role
                 switch ($request->user()->role) {
                     case 'admin':
-                        return redirect()->route('admin.dashboard');
+                        return redirect()->route('admin.dashboard')->with('error', 'Unauthorized access.');
                     case 'vendor':
-                        return redirect()->route('vendor.dashboard');
+                        return redirect()->route('vendor.dashboard')->with('error', 'Unauthorized access.');
                     default:
-                        return redirect()->route('dashboard');
+                        return redirect()->route('dashboard')->with('error', 'Unauthorized access.');
                 }
             }
             return redirect()->route('login');
