@@ -54,7 +54,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     // Shop Management
     Route::get('/shops', [AdminDashboardController::class , 'shops'])->name('shops');
     Route::post('/shops/{id}/toggle-status', [AdminDashboardController::class , 'toggleShopStatus'])->name('shops.toggleStatus');
-    Route::post('/shops/{id}/status/{status}', [AdminDashboardController::class , 'updateShopStatus'])->name('shops.updateStatus');
+    Route::patch('/shops/{id}/status', [AdminDashboardController::class , 'updateShopStatus'])->name('shops.updateStatus');
 
     // Products & Categories
     Route::post('/products/{id}/status/{status}', [AdminDashboardController::class , 'updateProductStatus'])->name('products.updateStatus');
